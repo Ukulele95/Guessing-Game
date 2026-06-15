@@ -1,26 +1,57 @@
 import random
-number = random.randint(1, 10)
-guesses = 0
 
-while True:
-    print(f"You are about to do attempt number {guesses + 1}.")
+def main():
+    while True:
+        counter = 0
+        number = random.randint(1, 10)
+        while counter < 3:
+            myguess, counter = guess(counter)
+            counter = evaluate(myguess, number, counter)
+        player_choice = again()
+        if player_choice == 1:
+            continue
+        elif player_choice == 2:
+            return
+
+def guess(counter):
+    print(f"This is attempt number {counter + 1}")
     while True:
         try:
-            guess = int(input("Guess: "))
-            guesses += 1
-            break
+            myguess = int(input("Guess: "))
+            if myguess < 1 or myguess > 10:
+                print("Please input a number between 1 and 10.")
+            else:
+                counter += 1
+                return myguess, counter
         except ValueError:
             print("Please input a number between 1 and 10.")
-    if guess == number:
+
+def evaluate(myguess, number, counter):
+    if myguess == number:
         print("You win!")
-        break
+        counter = 3
+    elif counter == 3:
+        print("You lose!")
     else:
-        if guesses < 3:
-            print("Try again!")
-            if guess < number:
-                print("Your guess was too small.")
-            else:
-                print("Your guess was too large.")
+        if myguess < number:
+            print("Your guess is too small. Try again!")
+            return counter
         else:
-            print("You lose!")
+            print("Your guess is too high. Try again!")
+            return counter
+    input("Press any button to continue.")
+    return counter
+
+def again():
+    while True:
+        choice = input("Do you want to play again? 1 = yes, 2 = no: ")
+        if choice in ("1", "2"):
+            player_choice = int(choice)
             break
+        else:
+            print("Please choose either 1 or 2.")
+    return player_choice
+
+
+
+main()
